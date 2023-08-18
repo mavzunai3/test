@@ -1,0 +1,33 @@
+import os
+from github import Github
+
+# Замените значения на свои данные
+github_token = "ВАШ_ТОКЕН_GITHUB"
+repo_name = "test-repo"
+file_name = "example.txt"
+file_content = "Hello, GitHub!"
+
+# Создаем локальную директорию и репозиторий
+os.mkdir(repo_name)
+os.chdir(repo_name)
+os.system("git init")
+
+# Создаем файл и записываем в него контент
+with open(file_name, "w") as file:
+    file.write(file_content)
+
+# Делаем коммит
+os.system(f"git add {file_name}")
+os.system(f'git commit -m "Initial commit"')
+
+# Связываемся с GitHub и создаем удаленный репозиторий
+g = Github(github_token)
+user = g.get_user()
+repo = user.create_repo(repo_name)
+
+# Добавляем удаленный репозиторий в локальный репозиторий и пушим
+os.system(f"git remote add origin {repo.git_url}")
+os.system("git branch -M main")
+os.system("git push -u origin main")
+
+print("Репозиторий успешно создан и настроен!")
